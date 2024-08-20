@@ -1,0 +1,73 @@
+1. Estrutura do Projeto
+public/drinks.json - Coloque o JSON aqui.
+src/App.jsx - Arquivo principal do componente React.
+2. Código do Componente React
+javascript
+Copiar código
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Importar Axios (opcional)
+
+function App() {
+  const [drinks, setDrinks] = useState(null); // Estado para armazenar dados dos refrigerantes
+  const [loading, setLoading] = useState(true); // Estado para carregamento
+  const [error, setError] = useState(''); // Estado para erros
+
+  useEffect(() => {
+    // Função para carregar dados da API
+    const fetchData = async () => {
+      try {
+        // Substitua pelo caminho real se necessário
+        const response = await axios.get('/drinks.json'); // Carrega o arquivo JSON estático
+        setDrinks(response.data.drinks); // Armazena os dados
+        setLoading(false); // Atualiza o estado de carregamento
+      } catch (err) {
+        setError('Erro ao carregar dados'); // Define a mensagem de erro
+        setLoading(false); // Atualiza o estado de carregamento
+      }
+    };
+
+    fetchData(); // Chama a função para carregar os dados
+  }, []); // Dependências vazias para executar apenas uma vez
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <div>
+      <h1>Marcas e Sabores de Refrigerantes</h1>
+      {drinks.map(drink => (
+        <div key={drink.brand}>
+          <h2>{drink.brand}</h2>
+          <ul>
+            {drink.flavors.map(flavor => (
+              <li key={flavor}>{flavor}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default App;
+
+
+Explicação
+Importações:
+
+React e useState, useEffect: Para criar e gerenciar o componente funcional.
+axios: Para facilitar a chamada à API (opcional, você pode usar fetch também).
+Estados:
+
+drinks: Armazena os dados dos refrigerantes.
+loading: Indica se os dados estão sendo carregados.
+error: Armazena mensagens de erro.
+useEffect:
+
+Carrega os dados do arquivo JSON quando o componente é montado.
+Renderização:
+
+Mostra uma lista de marcas de refrigerantes e seus sabores.
+Serviço Estático:
+
+O arquivo drinks.json deve estar no diretório public para ser acessível via URL /drinks.json.
